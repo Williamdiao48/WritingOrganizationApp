@@ -1,14 +1,11 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2";
+import bcrypt from "bcrypt";
 import sequelize from "./db.js"; 
-import "./models/User.js";
+import User from "./models/User.js";
 import "./models/Project.js";
 import "./models/WordCount.js";
-
-sequelize.sync({ alter: true}). then(() => {
-    console.log("All models synced with MySQL")
-});
 
 const app = express();
 
@@ -17,43 +14,72 @@ app.use(cors());
 app.use(express.json());
 
 
-//Connect to MySQL database
+//Register Route
+app.post("/register", async(req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ message: "Username and password required"})
+    }
 
-const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password: "",
-    database: "writing_app"
-})
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-db.connect((err) => {
-    if (err) {
-        console.error("Database connection failed:", err);}
-        else{
-            console.log("Connected to MySQL");
+        const newUser = await User.create({
+            username,
+            password: hashedPassword
+        });
+
+        res.status(201).json({ message: "User registered successfully" });}
+        catch (err) {
+            return res.status(400).json({ message: "Username already exists" });
         }
-});
-
-//test route
-app.get("/", (req, res) => {
-    res.send("Backend server is running!");
-  });
+        console.error("Registration error:", err);
+        res.status(500).json({ message: "Server error" });
+        }
+);
   
 
-//start server
-app.listen(5050, () =>{
-    console.log("Server started on port 5050")
-});
+//Login route
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
 
-app.get("/test-db", (req, res) => {
-    const sql = "SELECT * FROM test_table";
-
-    db. query(sql, (err, results) => {
-        if (err) {
-            console.error("Database query failed:", err);
-            res.status(500).json({ error: "Database query failed"});}
-        else{
-            res.json(results);
+    if (!username || !password){
+        return res.status(400).json({ message: "Username and password required" });
+    }
+    try {
+        const user = await User.findOne({ where: { username} });
+    
+        if (!user) {
+            return res.status(401).json({ message: "Invalid username or password"});
         }
-    });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if(!isMatch){
+        return res.status(401).json({ message: "Invalid username or password"});
+        }
+        
+        res.status(200).json({ message: "Login successful"});
+    } catch(err) {
+        console.error("Login error:", err);
+        res.status(500).json({ message: "Server error"});
+    }    
 });
+
+
+
+async function startServer() {
+    try {
+      await sequelize.authenticate();
+      console.log("Connected to DB");
+  
+      await sequelize.sync({ alter: true });
+      console.log("Models synced");
+  
+      app.listen(5050, () => console.log("Server running on port 5050"));
+    } catch (err) {
+      console.error("DB error:", err);
+    }
+  }
+  
+startServer();
