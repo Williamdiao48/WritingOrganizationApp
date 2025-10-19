@@ -5,7 +5,11 @@ import "./App.css"
 
 function App() {
   return(
-    <Outlet />
+    <div>
+      <h1>This the main page</h1>
+      <Outlet></Outlet>
+    </div>
+
   )
 }
 

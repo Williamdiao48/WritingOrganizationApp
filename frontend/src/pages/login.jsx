@@ -5,11 +5,30 @@ import "../styles/login.css";
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-    };
+
+    try{
+        const response = await fetch("http://localhost:5050/login", {
+            method: "POST",
+            headers: { "Content-type": "application/json"},
+            body: JSON.stringify({ username, password}),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setMessage(data.message);
+            navigate("/");}
+        else{
+            setMessage(data.message || "Login Failed");}}
+        catch (err) {
+            setMessage("Server error. Please try again later")
+        }
+};
 
     return (
         <div className = "login-page" >
