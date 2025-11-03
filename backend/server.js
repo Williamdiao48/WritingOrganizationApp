@@ -3,6 +3,7 @@ import cors from "cors";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import sequelize from "./db.js"; 
+import dotenv from "dotenv";
 import User from "./models/User.js";
 import "./models/Project.js";
 import "./models/WordCount.js";
@@ -76,8 +77,9 @@ async function startServer() {
       await sequelize.sync({ alter: true });
       console.log("Models synced");
   
-      app.listen(5050, () => console.log("Server running on port 5050"));
-    } catch (err) {
+      const PORT = process.env.APP_PORT;
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+      } catch (err) {
       console.error("DB error:", err);
     }
   }
