@@ -77,7 +77,7 @@ async function startServer() {
       await sequelize.sync({ alter: true });
       console.log("Models synced");
   
-      const PORT = process.env.APP_PORT || 5050;
+      const PORT = process.env.APP_PORT;
       app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
       } catch (err) {
       console.error("DB error:", err);
