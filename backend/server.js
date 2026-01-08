@@ -4,9 +4,11 @@ import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import sequelize from "./db.js"; 
 import dotenv from "dotenv";
-import User from "./models/User.js";
-import "./models/Project.js";
-import "./models/WordCount.js";
+import User from "./SQLmodels/User.js";
+import "./SQLmodels/Project.js";
+import "./SQLmodels/WordCount.js";
+import { connectMongoDB } from "./mongo.js";
+import jwt from 'jsonwebtoken';
 
 const app = express();
 
@@ -47,6 +49,7 @@ app.post("/login", async (req, res) => {
     if (!username || !password){
         return res.status(400).json({ message: "Username and password required" });
     }
+
     try {
         const user = await User.findOne({ where: { username} });
     
@@ -59,8 +62,21 @@ app.post("/login", async (req, res) => {
         if(!isMatch){
         return res.status(401).json({ message: "Invalid username or password"});
         }
+
+        const token = jwt.sign(
+            {userId: user.id},
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
         
-        res.status(200).json({ message: "Login successful"});
+        return res.status(200).json({
+            message: "Login successful",
+            token: token,
+            user: {
+                id: user.id,
+                username: user.username
+            }
+        });
     } catch(err) {
         console.error("Login error:", err);
         res.status(500).json({ message: "Server error"});
@@ -73,7 +89,10 @@ async function startServer() {
     try {
       await sequelize.authenticate();
       console.log("Connected to DB");
-  
+        
+      await connectMongoDB();
+      console.log("Connected to MongoDB")
+
       await sequelize.sync({ alter: true });
       console.log("Models synced");
   

@@ -21,6 +21,8 @@ function Login() {
         const data = await response.json();
 
         if (response.ok) {
+            localStorage.setItem('token', data.token)
+            localStorage.setItem("user", JSON.stringify(data.user));
             setMessage(data.message);
             navigate("/");}
         else{
