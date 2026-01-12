@@ -55,6 +55,10 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    justify-content: center;
+  }
+  .login-form {
+    align-items: center;
   }
   
   .login-page button[type="submit"]:hover {

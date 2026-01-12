@@ -4,9 +4,7 @@ import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import sequelize from "./db.js"; 
 import dotenv from "dotenv";
-import User from "./SQLmodels/User.js";
-import "./SQLmodels/Project.js";
-import "./SQLmodels/WordCount.js";
+import User from "./models/sql/User.js";
 import { connectMongoDB } from "./mongo.js";
 import jwt from 'jsonwebtoken';
 

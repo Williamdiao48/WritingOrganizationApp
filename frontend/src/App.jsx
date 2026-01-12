@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Home from "./pages/home";
+import Navbar from "./pages/navbar";
 import { Outlet } from "react-router-dom";
 import "./App.css"
 
 function App() {
   return(
-    <div>
-      <h1>This the main page</h1>
-      <Outlet></Outlet>
+    <div className = "app-container">
+      <Navbar />
+
+      <div className = "main-content">
+        <Outlet />
+      </div>
     </div>
 
   )

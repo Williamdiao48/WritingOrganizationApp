@@ -1,4 +1,4 @@
 import express from "express";
-import Project from "../mongoModels/Project.js";
+import Project from "../models/mongo/Project.js";
 
 const router = express.Router();
