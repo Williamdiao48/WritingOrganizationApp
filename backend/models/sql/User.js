@@ -1,12 +1,13 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../db.js";
+import sequelize from "../../db.js";
+
 
 class User extends Model {}
 
 User.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: UUIDV4,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
     username: {
