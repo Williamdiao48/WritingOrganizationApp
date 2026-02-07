@@ -5,12 +5,14 @@ import { Outlet } from "react-router-dom";
 import "./App.css"
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return(
     <div className = "app-container">
-      <Navbar />
+      <Navbar user = {user} setUser = {setUser}/>
 
       <div className = "main-content">
-        <Outlet />
+        <Outlet context = {{user, setUser}}/>
       </div>
     </div>
 

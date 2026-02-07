@@ -12,7 +12,7 @@ function Register(){
         e.preventDefault();
 
     try {
-        const response = await fetch("http://localhost:5050/register", { 
+        const response = await fetch("http://localhost:5050/api/users/register", { 
             method: "POST", //sends new data
             headers: { "Content-Type":"application/json"}, //informs backend its json
             body: JSON.stringify({ username, password}), //modifies javascript object into json string to send it
