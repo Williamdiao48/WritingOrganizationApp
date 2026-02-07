@@ -1,11 +1,13 @@
 import { useNavigate, Link } from "react-router-dom";
+import "../styles/navbar.css";
 
-const Navbar = () =>{
+const Navbar = ({user, setUser}) =>{
     const navigate = useNavigate();
 
     const handleSignOut = () =>{
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        setUser(null);
         navigate('/login');
     }
 
@@ -16,8 +18,13 @@ const Navbar = () =>{
             </div>
 
             <div className = "links">
-                <Link to = "/home" className = "nav-link">Home</Link> {/*Change this to dashboard later*/}
-                <button onClick={handleSignOut} className="signout-button">Sign Out</button>
+                <Link to = "/dashboard" className = "nav-link">Dashboard</Link> {/*Change this to dashboard later*/}
+
+                {user? (
+                    <button onClick={handleSignOut} className="signout-button">Sign Out</button>
+                ):(
+                    <Link to="/login" className="auth-button">Login</Link>
+                )}
             </div>
 
         </div>

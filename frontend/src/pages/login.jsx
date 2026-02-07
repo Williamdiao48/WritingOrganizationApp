@@ -1,31 +1,34 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useOutletContext } from "react-router-dom";
 import "../styles/login.css";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const {setUser} = useOutletContext();
     const navigate = useNavigate();
     
     const handleSubmit = async (e) => {
         e.preventDefault();
 
     try{
-        const response = await fetch("http://localhost:5050/login", {
+        const response = await fetch("http://localhost:5050/api/users/login", {
             method: "POST",
             headers: { "Content-type": "application/json"},
             body: JSON.stringify({ username, password}),
         });
 
         const data = await response.json();
-
+        console.log("Full response from server:", data);
         if (response.ok) {
             localStorage.setItem('token', data.token)
             localStorage.setItem("user", JSON.stringify(data.user));
             setMessage(data.message);
+            setUser(data.user);
             navigate("/");}
         else{
+            console.log("Entering ELSE block");
             setMessage(data.message || "Login Failed");}}
         catch (err) {
             setMessage("Server error. Please try again later")
@@ -54,6 +57,7 @@ function Login() {
             <br />
             <button type = "submit">Login</button>
             </form>
+            {message && <p>{message}</p>}
             <p>Don't have an account? <Link to = "/register">Register here</Link></p>
         </div>
     );

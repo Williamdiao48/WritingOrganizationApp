@@ -1,0 +1,50 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0 20px;
+    background-color: rgb(56, 65, 62);
+    flex-shrink: 0;
+    /*position:sticky;
+    flex-shrink: 0;
+    top: 0;
+    z-index: 1000;*/
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.links{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link{
+    color:rgb(139, 175, 206);
+    text-decoration: none;
+}
+
+.signout-button, .auth-button{
+    padding: 10px 20px;
+    color:white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+.signout-button{
+    background-color: #ff4d4d;
+}
+.signout-button:hover {
+    background-color: #e60000;
+}
+
+.auth-button{
+    background-color: rgb(114, 187, 251);
+}
+.auth-button:hover{
+    background-color: rgb(5, 121, 223);
+}

@@ -6,10 +6,6 @@ function Home(){
             <h1>Welcome to your Writing App</h1>
             <p>This is the homem page.</p>
 
-
-            <Link to = "/login">
-                <button>Login</button>
-            </Link>
         </div>
     );
 
