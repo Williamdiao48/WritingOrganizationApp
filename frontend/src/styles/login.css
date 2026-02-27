@@ -31,6 +31,7 @@
   }
   
   .login-page input[type="text"],
+  .login-page input[type="email"],
   .login-page input[type="password"] {
     width: 100%;
     padding: 10px 12px;

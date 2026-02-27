@@ -8,6 +8,8 @@ import App from './App.jsx'
 import Home from "./pages/home.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 import Dashboard from "./pages/dashboard.jsx";
 import ProjectLayout from "./pages/project/ProjectLayout.jsx";
 import ProjectHome from "./pages/project/ProjectHome.jsx";
@@ -28,6 +30,8 @@ createRoot(document.getElementById('root')).render(
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/project/:projectId" element={<ProjectLayout />}>
             <Route index element={<ProjectHome />} />
