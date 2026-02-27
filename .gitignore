@@ -38,3 +38,4 @@ Desktop.ini
 # ── Claude Code ───────────────────────────────────────────────
 # .claude/ contains session transcripts and project memory — keep local only
 .claude/
+.claudeignore
