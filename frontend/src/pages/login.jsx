@@ -20,7 +20,6 @@ function Login() {
         });
 
         const data = await response.json();
-        console.log("Full response from server:", data);
         if (response.ok) {
             localStorage.setItem('token', data.token)
             localStorage.setItem("user", JSON.stringify(data.user));
@@ -28,7 +27,6 @@ function Login() {
             setUser(data.user);
             navigate("/");}
         else{
-            console.log("Entering ELSE block");
             setMessage(data.message || "Login Failed");}}
         catch (err) {
             setMessage("Server error. Please try again later")

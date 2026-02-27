@@ -19,18 +19,17 @@ const projectSchema = new mongoose.Schema({
     },
     worldIds:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'world'
+        ref: 'World'
     }],
     storyIds:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'story'
+        ref: 'Story'
     }],
     characterIds:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'character'
+        ref: 'Character'
     }],
-    createdAt: { type: Date, default: Date.now }
-});
+}, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);
 

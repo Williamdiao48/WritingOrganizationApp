@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const worldSchema = new mongoose.Schema({
     projectId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: 'project',
+        ref: 'Project',
         required: true,
         index: true
     },
@@ -20,8 +20,7 @@ const worldSchema = new mongoose.Schema({
         header: String,
         body: String
     }],
-    createdAt: { type: Date, default: Date.now }
-}); 
+}, { timestamps: true });
 //Add character ids to this model later to allow the model to store certain characters
 
 const World = mongoose.model('World', worldSchema);
