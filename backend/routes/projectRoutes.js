@@ -30,17 +30,48 @@ router.post("/", authenticateToken, validate(createProjectSchema), async (req, r
     }
 });
 
-// GET /api/projects/user/:userId — get all projects for a user
+// GET /api/projects/user/:userId — get paginated active projects for a user
 router.get("/user/:userId", authenticateToken, async (req, res) => {
     try {
         if (req.params.userId !== req.user.userId) {
             return res.status(403).json({ message: "Forbidden" });
         }
-        const userProjects = await Project.find({ userId: req.params.userId });
-        res.json(userProjects);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+        const skip = (page - 1) * limit;
+
+        const filter = { userId: req.params.userId, archived: { $ne: true } };
+        const [projects, total] = await Promise.all([
+            Project.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit),
+            Project.countDocuments(filter),
+        ]);
+
+        res.json({ projects, page, totalPages: Math.ceil(total / limit), total });
     } catch (err) {
         console.error("Backend Error:", err);
         res.status(500).json({ error: "Could not fetch projects" });
+    }
+});
+
+// GET /api/projects/user/:userId/archived — get archived projects for a user
+router.get("/user/:userId/archived", authenticateToken, async (req, res) => {
+    try {
+        if (req.params.userId !== req.user.userId) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+        const skip = (page - 1) * limit;
+
+        const filter = { userId: req.params.userId, archived: true };
+        const [projects, total] = await Promise.all([
+            Project.find(filter).sort({ archivedAt: -1 }).skip(skip).limit(limit),
+            Project.countDocuments(filter),
+        ]);
+
+        res.json({ projects, page, totalPages: Math.ceil(total / limit), total });
+    } catch (err) {
+        res.status(500).json({ error: "Could not fetch archived projects" });
     }
 });
 
@@ -75,8 +106,42 @@ router.patch("/:id", authenticateToken, validate(updateProjectSchema), async (re
     }
 });
 
-// DELETE /api/projects/:id — delete project and cascade all children
+// PATCH /api/projects/:id/restore — restore archived project
+router.patch("/:id/restore", authenticateToken, async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) return res.status(404).json({ message: "Project not found" });
+        if (project.userId !== req.user.userId) return res.status(403).json({ message: "Forbidden" });
+
+        const updated = await Project.findByIdAndUpdate(
+            req.params.id,
+            { $set: { archived: false, archivedAt: null } },
+            { new: true }
+        );
+        res.json(updated);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// DELETE /api/projects/:id — soft-delete (archive) project
 router.delete("/:id", authenticateToken, async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) return res.status(404).json({ message: "Project not found" });
+        if (project.userId !== req.user.userId) return res.status(403).json({ message: "Forbidden" });
+
+        await Project.findByIdAndUpdate(req.params.id, {
+            $set: { archived: true, archivedAt: new Date() },
+        });
+        res.json({ message: "Project archived" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// DELETE /api/projects/:id/permanent — permanently delete project and cascade all children
+router.delete("/:id/permanent", authenticateToken, async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ message: "Project not found" });
@@ -98,7 +163,7 @@ router.delete("/:id", authenticateToken, async (req, res) => {
         await World.deleteMany({ projectId: req.params.id });
 
         await Project.findByIdAndDelete(req.params.id);
-        res.json({ message: "Project and all associated data deleted" });
+        res.json({ message: "Project and all associated data permanently deleted" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

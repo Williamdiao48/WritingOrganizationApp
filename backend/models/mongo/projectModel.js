@@ -29,6 +29,14 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Character'
     }],
+    archived: {
+        type: Boolean,
+        default: false,
+    },
+    archivedAt: {
+        type: Date,
+        default: null,
+    },
 }, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link, useOutletContext } from "react-router-dom";
+import { API } from "../lib/api.js";
 import "../styles/login.css";
 
 function Login() {
@@ -13,7 +14,7 @@ function Login() {
         e.preventDefault();
 
     try{
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/login`, {
+        const response = await fetch(`${API}/api/users/login`, {
             method: "POST",
             headers: { "Content-type": "application/json"},
             body: JSON.stringify({ username, password}),
@@ -56,7 +57,8 @@ function Login() {
             <button type = "submit">Login</button>
             </form>
             {message && <p>{message}</p>}
-            <p>Don't have an account? <Link to = "/register">Register here</Link></p>
+            <p><Link to="/forgot-password">Forgot password?</Link></p>
+            <p>Don't have an account? <Link to="/register">Register here</Link></p>
         </div>
     );
 }

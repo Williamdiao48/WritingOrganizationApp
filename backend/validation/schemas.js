@@ -3,11 +3,21 @@ import { z } from 'zod';
 // ── User ────────────────────────────────────────────────────
 export const registerSchema = z.object({
     username: z.string().min(3).max(30),
+    email: z.string().email().max(255),
     password: z.string().min(6).max(100),
 });
 
 export const loginSchema = z.object({
     username: z.string().min(1),
+    password: z.string().min(6).max(100),
+});
+
+export const forgotPasswordSchema = z.object({
+    email: z.string().email(),
+});
+
+export const resetPasswordSchema = z.object({
+    token: z.string().min(1),
     password: z.string().min(6).max(100),
 });
 
@@ -28,12 +38,18 @@ export const createStorySchema = z.object({
     projectId: z.string().min(1),
     title: z.string().min(1).max(200),
     status: z.enum(['Draft', 'In Progress', 'Completed']).optional(),
+    visibility: z.enum(['Private', 'Public', 'Archived']).optional(),
+    worldId: z.string().optional(),
+    cover: z.string().max(500).optional(),
     summary: z.string().max(5000).optional(),
 });
 
 export const updateStorySchema = z.object({
     title: z.string().min(1).max(200).optional(),
     status: z.enum(['Draft', 'In Progress', 'Completed']).optional(),
+    visibility: z.enum(['Private', 'Public', 'Archived']).optional(),
+    worldId: z.string().optional(),
+    cover: z.string().max(500).optional(),
     summary: z.string().max(5000).optional(),
 });
 
