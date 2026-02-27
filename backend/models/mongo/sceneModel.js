@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const sceneSchema = new mongoose.model({
+const sceneSchema = new mongoose.Schema({
     chapterId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Chapter',
@@ -24,7 +24,7 @@ const sceneSchema = new mongoose.model({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Character'
     }]*/
-    },{timestamps: True});
+    },{timestamps: true});
 
     const Scene = mongoose.model("Scene", sceneSchema);
     

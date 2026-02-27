@@ -5,6 +5,11 @@ import dotenv from "dotenv";
 import { connectMongoDB } from "./mongo.js";
 import userRoutes from './routes/userRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import storyRoutes from './routes/storyRoutes.js';
+import chapterRoutes from './routes/chapterRoutes.js';
+import sceneRoutes from './routes/sceneRoutes.js';
+import characterRoutes from './routes/characterRoutes.js';
+import worldRoutes from './routes/worldRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -14,7 +19,12 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
-app.use('/api/projects', projectRoutes)
+app.use('/api/projects', projectRoutes);
+app.use('/api/stories', storyRoutes);
+app.use('/api/chapters', chapterRoutes);
+app.use('/api/scenes', sceneRoutes);
+app.use('/api/characters', characterRoutes);
+app.use('/api/worlds', worldRoutes);
 
 
 

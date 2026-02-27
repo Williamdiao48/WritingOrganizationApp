@@ -1,0 +1,3 @@
+# Environment files — never expose secrets to Claude
+**/.env
+**/.env.*

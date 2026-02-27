@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { STRING } from "sequelize";
 
 const projectSchema = new mongoose.Schema({
     userId: {

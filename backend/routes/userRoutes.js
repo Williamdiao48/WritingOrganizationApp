@@ -2,15 +2,14 @@ import bcrypt from "bcrypt";
 import User from "../models/sql/User.js";
 import jwt from 'jsonwebtoken';
 import express from "express";
+import { validate } from '../middleware/validate.js';
+import { registerSchema, loginSchema } from '../validation/schemas.js';
 
 const router = express.Router();
 
 //Register Route
-router.post("/register", async(req, res) => {
+router.post("/register", validate(registerSchema), async(req, res) => {
     const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ message: "Username and password required"})
-    }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({
@@ -28,14 +27,11 @@ router.post("/register", async(req, res) => {
     });
 
 //Login route
-router.post("/login", async (req, res) => {
+router.post("/login", validate(loginSchema), async (req, res) => {
     const { username, password } = req.body;
-    if (!username || !password){
-        return res.status(400).json({ message: "Username and password required" });
-    }
     try {
         const user = await User.findOne({ where: { username} });
-    
+
         if (!user) {
             return res.status(401).json({ message: "Invalid username or password"});
         }
@@ -60,7 +56,7 @@ router.post("/login", async (req, res) => {
     } catch(err) {
         console.error("Login error:", err);
         res.status(500).json({ message: "Server error"});
-    }    
+    }
 });
 
 export default router;
