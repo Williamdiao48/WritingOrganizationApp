@@ -34,7 +34,7 @@ writing-app/
 │   │   └── validate.js         # Zod schema validation middleware
 │   ├── models/
 │   │   ├── sql/
-│   │   │   └── User.js         # Sequelize User model (MySQL)
+│   │   │   └── User.js               # Sequelize User model (MySQL)
 │   │   └── mongo/
 │   │       ├── projectModel.js
 │   │       ├── storyModel.js
@@ -100,7 +100,7 @@ writing-app/
 │   ├── vite.config.js          # Dev proxy: /api → localhost:5050
 │   ├── eslint.config.js
 │   └── index.html
-├── package.json                # Root (minimal)
+├── package.json
 └── README.md
 ```
 
@@ -182,7 +182,7 @@ npm install
 npm run dev
 ```
 
-The dev server runs at `http://localhost:5173`. The Vite proxy forwards all `/api` requests to `http://localhost:5050`, so no CORS issues in development.
+The frontend dev server runs at `http://localhost:5173`. In development, all `/api/*` requests are proxied to `http://localhost:5050` automatically — no separate `VITE_API_URL` configuration needed.
 
 ---
 
@@ -239,6 +239,8 @@ The dev server runs at `http://localhost:5173`. The Vite proxy forwards all `/ap
 ---
 
 ## API Reference
+
+All endpoints except `/register` and `/login` require `Authorization: Bearer <token>`.
 
 Base URL: `http://localhost:5050/api`
 
@@ -341,7 +343,7 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 ### MySQL (Sequelize)
 
-**Users** table (`models/sql/User.js`)
+**Users** (`models/sql/User.js`)
 
 | Column | Type | Constraints |
 |---|---|---|
@@ -355,6 +357,8 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 | `updatedAt` | DATE | Auto |
 
 ### MongoDB (Mongoose)
+
+All MongoDB models use `{ timestamps: true }` — `createdAt` and `updatedAt` are managed automatically.
 
 **Project**
 
@@ -375,8 +379,8 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 | Field | Type | Notes |
 |---|---|---|
-| `projectId` | ObjectId | Required, indexed |
-| `worldId` | ObjectId | References World |
+| `projectId` | ObjectId → Project | Required, indexed |
+| `worldId` | ObjectId → World | |
 | `title` | String | Max 250, required |
 | `cover` | String | Image URL |
 | `summary` | String | Max 2500 |
@@ -390,7 +394,7 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 | Field | Type | Notes |
 |---|---|---|
-| `storyId` | ObjectId | Required, indexed |
+| `storyId` | ObjectId → Story | Required, indexed |
 | `title` | String | Max 300, default `Untitled Chapter` |
 | `summary` | String | Max 2000 |
 | `content` | String | TipTap JSON (stringified) |
@@ -402,7 +406,7 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 | Field | Type | Notes |
 |---|---|---|
-| `chapterId` | ObjectId | Required, indexed |
+| `chapterId` | ObjectId → Chapter | Required, indexed |
 | `title` | String | Default `New Scene` |
 | `content` | String | TipTap JSON (stringified) |
 | `order` | Number | Default 0 |
@@ -412,7 +416,7 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 | Field | Type | Notes |
 |---|---|---|
-| `projectId` | ObjectId | Required, indexed |
+| `projectId` | ObjectId → Project | Required, indexed |
 | `name` | String | Required, max 200 |
 | `role` | String | Max 200 |
 | `avatar` | String | Image URL |
@@ -425,7 +429,7 @@ Auth endpoints are rate-limited to **10 requests / 15 minutes** per IP.
 
 | Field | Type | Notes |
 |---|---|---|
-| `projectId` | ObjectId | Required, indexed |
+| `projectId` | ObjectId → Project | Required, indexed |
 | `name` | String | Required, max 300 |
 | `description` | String | Max 3000 |
 | `loreSections` | Array | `[{ header: String, body: String }]` |
