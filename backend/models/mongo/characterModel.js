@@ -15,7 +15,6 @@ const characterSchema = new mongoose.Schema({
     role:{
         type: String,
         maxlength: 200,
-        placholder: "e.g. Protagonist, Antagonist, Mentor"
     },
     avatar:{
         type: String
@@ -33,7 +32,7 @@ const characterSchema = new mongoose.Schema({
         type: String,
         maxlength: 5000
     },
-    createdAt: { type: Date, default: Date.now }}, { timestamps: true });
+}, { timestamps: true });
 
 const Character = mongoose.model("Character", characterSchema);
 

@@ -45,8 +45,7 @@ const storySchema = new mongoose.Schema({
         enum: ['Private', 'Public', 'Archived'],
         default: 'Private'
     },
-    createdAt: { type: Date, default: Date.now }
-});
+}, { timestamps: true });
 
 const Story = mongoose.model("Story", storySchema);
 

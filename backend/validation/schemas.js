@@ -8,7 +8,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
     username: z.string().min(1),
-    password: z.string().min(1),
+    password: z.string().min(6).max(100),
 });
 
 // ── Project ─────────────────────────────────────────────────
@@ -27,13 +27,13 @@ export const updateProjectSchema = z.object({
 export const createStorySchema = z.object({
     projectId: z.string().min(1),
     title: z.string().min(1).max(200),
-    status: z.string().max(50).optional(),
+    status: z.enum(['Draft', 'In Progress', 'Completed']).optional(),
     summary: z.string().max(5000).optional(),
 });
 
 export const updateStorySchema = z.object({
     title: z.string().min(1).max(200).optional(),
-    status: z.string().max(50).optional(),
+    status: z.enum(['Draft', 'In Progress', 'Completed']).optional(),
     summary: z.string().max(5000).optional(),
 });
 

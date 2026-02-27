@@ -2,13 +2,22 @@ import bcrypt from "bcrypt";
 import User from "../models/sql/User.js";
 import jwt from 'jsonwebtoken';
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { validate } from '../middleware/validate.js';
 import { registerSchema, loginSchema } from '../validation/schemas.js';
 
 const router = express.Router();
 
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: "Too many attempts, please try again later." },
+});
+
 //Register Route
-router.post("/register", validate(registerSchema), async(req, res) => {
+router.post("/register", authLimiter, validate(registerSchema), async(req, res) => {
     const { username, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,7 +36,7 @@ router.post("/register", validate(registerSchema), async(req, res) => {
     });
 
 //Login route
-router.post("/login", validate(loginSchema), async (req, res) => {
+router.post("/login", authLimiter, validate(loginSchema), async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ where: { username} });

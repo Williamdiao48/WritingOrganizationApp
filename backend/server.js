@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import sequelize from "./db.js"; 
+import helmet from "helmet";
+import sequelize from "./db.js";
 import dotenv from "dotenv";
 import { connectMongoDB } from "./mongo.js";
 import userRoutes from './routes/userRoutes.js';
@@ -15,7 +16,11 @@ dotenv.config();
 const app = express();
 
 // Middleware setup
-app.use(cors());
+app.use(helmet());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+}));
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
@@ -44,7 +49,8 @@ async function startServer() {
       const PORT = process.env.APP_PORT;
       app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
       } catch (err) {
-      console.error("DB error:", err);
+      console.error("Startup error:", err);
+      process.exit(1);
     }
   }
   

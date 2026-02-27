@@ -17,6 +17,7 @@ import WorldDetail from "./pages/project/WorldDetail.jsx";
 import StoryLayout from "./pages/project/story/StoryLayout.jsx";
 import StoryHome from "./pages/project/story/StoryHome.jsx";
 import ChapterEditor from "./pages/project/story/ChapterEditor.jsx";
+import SceneEditor from "./pages/project/story/SceneEditor.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="story/:storyId" element={<StoryLayout />}>
               <Route index element={<StoryHome />} />
               <Route path="chapter/:chapterId" element={<ChapterEditor />} />
+              <Route path="chapter/:chapterId/scene/:sceneId" element={<SceneEditor />} />
             </Route>
             <Route path="characters" element={<CharacterRoster />} />
             <Route path="characters/:characterId" element={<CharacterProfile />} />
